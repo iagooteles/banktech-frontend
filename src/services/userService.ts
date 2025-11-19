@@ -11,6 +11,15 @@ export interface UserResponse {
   email: string;
   name: string;
   role: string;
+
+  account?: {
+    id: number;
+    agencyNumber: string;
+    accountNumber: string;
+    balance: number;
+    status: string;
+    createdAt: string;
+  };
 }
 
 export interface AuthResponse {

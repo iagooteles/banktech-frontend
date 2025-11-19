@@ -5,11 +5,16 @@ import type { DashboardData } from '@/types';
 import { accountService } from '@/services/accountService';
 import DashboardNav from '@/components/DashboardNav';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { user, isAuthenticated } = useAuth();
+
+  // TODO: Remover! 
+  console.log(user);
 
   useEffect(() => {
     loadDashboard();
@@ -19,13 +24,12 @@ export default function DashboardPage() {
     try {
       setLoading(true);
       
-      // Mock data para desenvolvimento
       const mockDashboard: DashboardData = {
         account: {
           id: '1',
           userId: '1',
           accountNumber: '12345-6',
-          agency: '0001',
+          agencyNumber: '0001',
           balance: 5432.10,
           type: 'CHECKING',
           status: 'ACTIVE',
@@ -90,7 +94,6 @@ export default function DashboardPage() {
         }
       };
 
-      // Simular delay da API
       await new Promise(resolve => setTimeout(resolve, 500));
       
       setData(mockDashboard);
@@ -165,13 +168,14 @@ export default function DashboardPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">
-                  Olá, Matheus! 👋
+                  Olá, {user?.name ?? 'usuário'}! 👋
                 </h1>
                 <p className="text-blue-100">Bem-vindo de volta ao seu dashboard</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-blue-100 mb-1">Agência {data.account.agency}</p>
-                <p className="text-sm text-blue-100">Conta {data.account.accountNumber}</p>
+                {/* TODO: trocar o data por user do  */}
+                <p className="text-sm text-blue-100 mb-1">Agência {user?.account?.agencyNumber ?? data.account.agencyNumber}</p>
+                <p className="text-sm text-blue-100">Conta {user?.account?.accountNumber ?? data.account.accountNumber}</p>
               </div>
             </div>
           </div>
@@ -219,7 +223,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-sm text-green-700 dark:text-green-400 font-medium">Saldo Disponível</p>
                 <p className="text-4xl font-bold text-green-900 dark:text-green-300 mt-2">
-                  {formatCurrency(data.account.balance)}
+                  {formatCurrency(user?.account?.balance ?? data.account.balance)}
                 </p>
               </div>
               <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg">

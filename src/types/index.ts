@@ -13,7 +13,7 @@ export interface Account {
   id: string;
   userId: string;
   accountNumber: string;
-  agency: string;
+  agencyNumber: string;
   balance: number;
   type: 'CHECKING' | 'SAVINGS';
   status: 'ACTIVE' | 'BLOCKED' | 'INACTIVE';
@@ -46,17 +46,19 @@ export interface Transaction {
 
 // Transfer types
 export interface TransferRequest {
-  recipientAccountNumber: string;
-  recipientAgency: string;
+  fromAccountNumber: string;
+  toAccountNumber: string;
   amount: number;
-  description?: string;
+  description: string;
 }
 
 export interface TransferResponse {
-  transactionId: string;
-  status: TransactionStatus;
+  transactionId: number;
+  message: string;
   amount: number;
-  createdAt: string;
+  date: string;
+  fromAccount: string;
+  toAccount: string;
 }
 
 // PIX types

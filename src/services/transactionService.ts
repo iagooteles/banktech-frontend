@@ -6,7 +6,7 @@ import type {
   TransferResponse,
 } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
 
 export const transactionService = {
   async getTransactions(limit: number = 10): Promise<Transaction[]> {
@@ -64,6 +64,10 @@ export const transactionService = {
 
   async transfer(request: TransferRequest): Promise<TransferResponse> {
     const token = localStorage.getItem('token');
+
+    console.log("Transfer request:", request);
+
+
     const response = await fetch(`${API_URL}/transactions/transfer`, {
       method: 'POST',
       headers: {
@@ -73,11 +77,18 @@ export const transactionService = {
       body: JSON.stringify(request),
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Transfer failed');
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error('Transfer failed: invalid response from server');
     }
 
-    return response.json();
-  },
+    if (!response.ok) {
+      throw new Error(data.message || 'Transfer failed');
+    }
+
+    return data;
+  }
+
 };

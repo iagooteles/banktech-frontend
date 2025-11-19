@@ -13,7 +13,7 @@ export interface UseAuthState {
 
 const STORAGE_KEYS = {
   USER: 'banktech_user',
-  TOKEN: 'banktech_token',
+  TOKEN: 'token',
 };
 
 export const useAuth = () => {
@@ -95,7 +95,6 @@ export const useAuth = () => {
     });
   }, []);
 
-  // Limpar erro
   const clearError = useCallback(() => {
     setState((prev) => ({ ...prev, error: null }));
   }, []);

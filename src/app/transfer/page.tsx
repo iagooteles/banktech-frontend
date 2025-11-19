@@ -3,14 +3,23 @@
 import { useState } from 'react';
 import { transactionService } from '@/services/transactionService';
 import type { TransferRequest } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function TransferPage() {
-  const [formData, setFormData] = useState<TransferRequest>({
+  const { user } = useAuth();
+  
+  const userAccount = {
+    agency: user?.account?.agencyNumber ?? "",
+    account: user?.account?.accountNumber ?? "",
+  };
+
+  const [formData, setFormData] = useState({
     recipientAccountNumber: '',
     recipientAgency: '',
     amount: 0,
     description: '',
   });
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +30,15 @@ export default function TransferPage() {
     setError(null);
     setSuccess(false);
 
+    const payload: TransferRequest = {
+      fromAccountNumber: userAccount.account,
+      toAccountNumber: formData.recipientAccountNumber,
+      amount: formData.amount,
+      description: formData.description,
+    };
+
     try {
-      await transactionService.transfer(formData);
+      await transactionService.transfer(payload);
       setSuccess(true);
       setFormData({
         recipientAccountNumber: '',
@@ -69,20 +85,24 @@ export default function TransferPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Agência Destinatário */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Agência
+                Agência do destinatário
               </label>
               <input
                 type="text"
                 value={formData.recipientAgency}
-                onChange={(e) => setFormData({ ...formData, recipientAgency: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, recipientAgency: e.target.value })
+                }
                 placeholder="0001"
                 required
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
+            {/* Conta destinatário */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Conta (sem dígito)
@@ -90,13 +110,16 @@ export default function TransferPage() {
               <input
                 type="text"
                 value={formData.recipientAccountNumber}
-                onChange={(e) => setFormData({ ...formData, recipientAccountNumber: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, recipientAccountNumber: e.target.value })
+                }
                 placeholder="12345678"
                 required
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
+            {/* Valor */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Valor
@@ -110,7 +133,12 @@ export default function TransferPage() {
                   step="0.01"
                   min="0.01"
                   value={formData.amount || ''}
-                  onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      amount: parseFloat(e.target.value) || 0,
+                    })
+                  }
                   placeholder="0,00"
                   required
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
@@ -123,13 +151,16 @@ export default function TransferPage() {
               )}
             </div>
 
+            {/* Descrição */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Descrição (opcional)
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 placeholder="Ex: Pagamento aluguel"
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white resize-none"
