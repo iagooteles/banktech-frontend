@@ -1,3 +1,5 @@
+import { useAuth } from "@/hooks/useAuth";
+
 const API_BASE_URL = process.env.BACKEND_URL || 'http://localhost:8081';
 
 export interface RegisterData {
@@ -134,4 +136,32 @@ export const userService = {
       throw error;
     }
   },
+
+  async deposit(
+    agency: string,
+    account: string,
+    amount: number
+  ): Promise<{ message: string; balance: number }> {
+
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`${API_BASE_URL}/users/deposit`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ agency, account, amount }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+    
+
+    if (!response.ok) {
+      throw new Error(data.message || "Erro ao realizar depósito");
+    }
+
+    return data;
+  }
 };

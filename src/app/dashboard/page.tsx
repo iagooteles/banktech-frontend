@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import type { DashboardData } from '@/types';
-import { accountService } from '@/services/accountService';
 import DashboardNav from '@/components/DashboardNav';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';

@@ -65,9 +65,6 @@ export const transactionService = {
   async transfer(request: TransferRequest): Promise<TransferResponse> {
     const token = localStorage.getItem('token');
 
-    console.log("Transfer request:", request);
-
-
     const response = await fetch(`${API_URL}/transactions/transfer`, {
       method: 'POST',
       headers: {
@@ -90,5 +87,4 @@ export const transactionService = {
 
     return data;
   }
-
 };

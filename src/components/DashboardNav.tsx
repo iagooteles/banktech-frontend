@@ -20,7 +20,7 @@ export default function DashboardNav() {
     { href: '/payments', label: 'Pagamentos', icon: '💳' },
     { href: '/transactions', label: 'Extrato', icon: '📝' },
     { href: '/cards', label: 'Cartões', icon: '💳' },
-    { href: '/investments', label: 'Investimentos', icon: '📈' },
+    { href: '/deposit', label: 'Depósito', icon: '⬆️' },
   ];
 
   return (

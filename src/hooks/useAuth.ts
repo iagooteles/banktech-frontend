@@ -99,10 +99,32 @@ export const useAuth = () => {
     setState((prev) => ({ ...prev, error: null }));
   }, []);
 
+  const updateBalance = useCallback((newBalance: number) => {
+    setState(prev => {
+      if (!prev.user) return prev;
+
+      const updatedUser = {
+        ...prev.user,
+        account: {
+          ...prev.user.account!,
+          balance: newBalance,
+        },
+      };
+
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updatedUser));
+
+      return { 
+        ...prev,
+        user: updatedUser
+      };
+    });
+  }, []);
+
   return {
     ...state,
     login,
     logout,
     clearError,
+    updateBalance,
   };
 };
