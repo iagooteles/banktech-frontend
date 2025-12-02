@@ -1,6 +1,6 @@
 import type { SupportTicket, SupportMessage, FAQItem } from '@/types/extended';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
 
 export const supportService = {
   // Tickets

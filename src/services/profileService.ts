@@ -1,6 +1,6 @@
 import type { UserProfile, DeviceSession, AuditLog, SecuritySettings, TransactionLimits } from '@/types/extended';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
 
 export const profileService = {
   async getProfile(): Promise<UserProfile> {
